@@ -1,0 +1,71 @@
+#5a
+%{
+#include <stdio.h>
+#include <ctype.h>
+#include <stdlib.h>
+int yylex(void);
+int yyerror(const char *s);
+%}
+%token ta tb
+%%
+S : T '\n' { printf("valid"); exit(0); }
+ ;
+T :
+| ta T tb
+ ;
+%%
+int yylex(void)
+{
+ int c;
+ while ((c = getchar()) == ' ' );
+ if (c == 'a')
+ return ta;
+ if (c == 'b')
+ return tb;
+return c;
+}
+int main(void)
+{
+ yyparse();
+ return 0;
+}
+int yyerror(const char *s)
+{
+ printf("error\n");
+ return 0;
+}
+#5b
+%{
+#include <stdio.h>
+#include <ctype.h>
+int yylex(void);
+int yyerror(const char *s);
+%}
+%token ta tb
+%%
+V:|ta ta ta ta ta ta ta ta ta ta p'\n' { printf("valid"); }
+;
+p:ta p
+|tb
+;
+%%
+int yylex(void)
+{
+ int c;
+ while ((c = getchar()) == ' ') ;
+ if (c == 'a')
+ return ta;
+ if (c == 'b')
+ return tb;
+ return c; 
+}
+int main()
+{
+ yyparse();
+ return 0;
+}
+int yyerror(const char *s)
+{
+ printf("error\n");
+ return 0;
+}
